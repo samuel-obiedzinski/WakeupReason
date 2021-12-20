@@ -26,7 +26,7 @@ typedef enum
 int main(int argc, char *argv[])
 {
     if (argc > 1 && 0 != strcmp("clear", argv[1])) {
-        printf("WakeupReason v0.1\n");
+        printf("WakeupReason v0.2\n");
         printf("\tUsage: %s [clear]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
@@ -108,13 +108,13 @@ int main(int argc, char *argv[])
         printf("Power key: 0x%llx\n", powerIRKeyCode);
 
     if (argc > 1) {
-        // reset wake up reason,0 => IR => user
-        REG_WRITE32(pWakeupReasonVirtualAddres + page_offset / 4, 0);
-        REG_WRITE32(pWakeupReasonVirtualAddres + 1 + page_offset / 4, 0);
-        REG_WRITE32(pWakeupReasonVirtualAddres + 2 + page_offset / 4, 0);
+        // reset wake up reason, 0xFFFFFFFF => unknow => (master power)
+        REG_WRITE32(pWakeupReasonVirtualAddres + page_offset / 4, 0xFFFFFFFF);
+        REG_WRITE32(pWakeupReasonVirtualAddres + 1 + page_offset / 4, 0xFFFFFFFF);
+        REG_WRITE32(pWakeupReasonVirtualAddres + 2 + page_offset / 4, 0xFFFFFFFF);
     }
 
-    munmap(pWakeupReasonVirtualAddres, 0x10);
+    munmap(pWakeupReasonVirtualAddres, page_offset + len);
 
     close(fd);
 
